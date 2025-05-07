@@ -1,0 +1,24 @@
+def solution(info, n, m):
+    from functools import lru_cache
+
+    length = len(info)
+
+    @lru_cache(None)
+    def dfs(i, a_sum, b_sum):
+        if a_sum >= n or b_sum >= m:
+            return float('inf')  # 둘 중 하나라도 경찰에 잡힘
+        if i == length:
+            return a_sum  # 모든 물건 훔침
+
+        a_trace, b_trace = info[i]
+
+        # A가 훔침
+        a_result = dfs(i + 1, a_sum + a_trace, b_sum)
+
+        # B가 훔침
+        b_result = dfs(i + 1, a_sum, b_sum + b_trace)
+
+        return min(a_result, b_result)
+
+    result = dfs(0, 0, 0)
+    return result if result != float('inf') else -1
